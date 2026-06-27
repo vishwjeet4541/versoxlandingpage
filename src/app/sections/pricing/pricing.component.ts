@@ -143,8 +143,7 @@ import { Component, signal } from '@angular/core';
     <!-- Bottom CTA -->
     <div class="bottom-cta">
       <h2>Ready to simplify your business?</h2>
-      <p>Start managing Inventory, GST Billing, Purchases and Expenses from one platform.</p>
-      <a href="#contact" class="btn btn-primary cta-btn">Start Free Trial</a>
+        <a href="#contact" class="btn btn-primary cta-btn">Start Free Trial</a>
     </div>
   </div>
 </section>

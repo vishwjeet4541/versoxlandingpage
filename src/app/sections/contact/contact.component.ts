@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-contact',
@@ -153,7 +154,24 @@ export class ContactComponent {
       this.successMessage = '';
       this.errorMessage = '';
       
-      this.http.post(`${environment.apiUrl}/inquiries`, this.inquiryForm.value).subscribe({
+      let requestBody: any = this.inquiryForm.value;
+      const enableEncryption = true;
+      const encryptionKey = 'itvtrtr474wdy';
+
+      if (enableEncryption) {
+        try {
+          const dataString = JSON.stringify(requestBody);
+          const encryptedPayload = CryptoJS.AES.encrypt(dataString, encryptionKey).toString();
+          requestBody = { payload: encryptedPayload };
+        } catch (e) {
+          console.error('Encryption failed', e);
+          this.errorMessage = 'An error occurred while preparing your inquiry.';
+          this.isLoading = false;
+          return;
+        }
+      }
+      
+      this.http.post(`${environment.apiUrl}/inquiries`, requestBody).subscribe({
         next: (res: any) => {
           this.isLoading = false;
           this.successMessage = res.message || 'Inquiry submitted successfully! We will contact you soon.';
